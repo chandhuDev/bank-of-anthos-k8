@@ -6,14 +6,14 @@ metadata:
     environment: development
     team: ledger
     tier: backend
-  name: ledgerwriter
+  name: balancereader
 spec:
   ports:
     - name: http
       port: 8080
       targetPort: 8080
   selector:
-    app: ledgerwriter
+    app: balancereader
     application: bank-of-anthos
     environment: development
     team: ledger
@@ -28,11 +28,11 @@ metadata:
     environment: development
     team: ledger
     tier: backend
-  name: ledgerwriter
+  name: balancereader
 spec:
   selector:
     matchLabels:
-      app: ledgerwriter
+      app: balancereader
       application: bank-of-anthos
       environment: development
       team: ledger
@@ -42,7 +42,7 @@ spec:
       annotations:
         proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
       labels:
-        app: ledgerwriter
+        app: balancereader
         application: bank-of-anthos
         environment: development
         team: ledger
@@ -58,6 +58,10 @@ spec:
               value: "true"
             - name: ENABLE_METRICS
               value: "true"
+            - name: POLL_MS
+              value: "100"
+            - name: CACHE_SIZE
+              value: "1000000"
             - name: JVM_OPTS
               value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xms256m -Xmx512m
             - name: LOG_LEVEL
@@ -70,11 +74,16 @@ spec:
             - configMapRef:
                 name: environment-config
             - configMapRef:
-                name: service-api-config
-            - configMapRef:
                 name: ledger-db-config
-          image: us-central1-docker.pkg.dev/bank-of-anthos-ci/bank-of-anthos/ledgerwriter:v0.6.5@sha256:5b66d6888b87993c8ebe260fe33005c4e4bc2bdae4b5682874e1a078d37ff3b2
-          name: ledgerwriter
+          image: chandhudev0/boa-balancereader
+          livenessProbe:
+            httpGet:
+              path: /healthy
+              port: 8080
+            initialDelaySeconds: 120
+            periodSeconds: 5
+            timeoutSeconds: 10
+          name: balancereader
           readinessProbe:
             httpGet:
               path: /ready
@@ -101,7 +110,7 @@ spec:
           startupProbe:
             failureThreshold: 30
             httpGet:
-              path: /ready
+              path: /healthy
               port: 8080
             periodSeconds: 10
           volumeMounts:

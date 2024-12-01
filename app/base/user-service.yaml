@@ -4,21 +4,21 @@ metadata:
   labels:
     application: bank-of-anthos
     environment: development
-    team: frontend
-    tier: web
-  name: frontend
+    team: accounts
+    tier: backend
+  name: userservice
 spec:
   ports:
     - name: http
-      port: 80
+      port: 8080
       targetPort: 8080
   selector:
-    app: frontend
+    app: userservice
     application: bank-of-anthos
     environment: development
-    team: frontend
-    tier: web
-  type: LoadBalancer
+    team: accounts
+    tier: backend
+  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -26,27 +26,27 @@ metadata:
   labels:
     application: bank-of-anthos
     environment: development
-    team: frontend
-    tier: web
-  name: frontend
+    team: accounts
+    tier: backend
+  name: userservice
 spec:
   selector:
     matchLabels:
-      app: frontend
+      app: userservice
       application: bank-of-anthos
       environment: development
-      team: frontend
-      tier: web
+      team: accounts
+      tier: backend
   template:
     metadata:
       annotations:
         proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
       labels:
-        app: frontend
+        app: userservice
         application: bank-of-anthos
         environment: development
-        team: frontend
-        tier: web
+        team: accounts
+        tier: backend
     spec:
       containers:
         - env:
@@ -56,46 +56,22 @@ spec:
               value: "8080"
             - name: ENABLE_TRACING
               value: "true"
-            - name: SCHEME
-              value: http
+            - name: TOKEN_EXPIRY_SECONDS
+              value: "3600"
+            - name: PRIV_KEY_PATH
+              value: /tmp/.ssh/privatekey
             - name: LOG_LEVEL
               value: info
-            - name: DEFAULT_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  key: DEMO_LOGIN_USERNAME
-                  name: demo-data-config
-            - name: DEFAULT_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  key: DEMO_LOGIN_PASSWORD
-                  name: demo-data-config
-            - name: REGISTERED_OAUTH_CLIENT_ID
-              valueFrom:
-                configMapKeyRef:
-                  key: DEMO_OAUTH_CLIENT_ID
-                  name: oauth-config
-                  optional: true
-            - name: ALLOWED_OAUTH_REDIRECT_URI
-              valueFrom:
-                configMapKeyRef:
-                  key: DEMO_OAUTH_REDIRECT_URI
-                  name: oauth-config
-                  optional: true
           envFrom:
             - configMapRef:
                 name: environment-config
             - configMapRef:
-                name: service-api-config
-          image: us-central1-docker.pkg.dev/bank-of-anthos-ci/bank-of-anthos/frontend:v0.6.5@sha256:d72050f70d12383e4434ad04d189b681dc625f696087ddf0b5df641645c9dafa
-          livenessProbe:
-            httpGet:
-              path: /ready
-              port: 8080
-            initialDelaySeconds: 60
-            periodSeconds: 15
-            timeoutSeconds: 30
-          name: front
+                name: accounts-db-config
+          image: chandhudev0/boa-user-service
+          name: userservice
+          ports:
+            - containerPort: 8080
+              name: http-server
           readinessProbe:
             httpGet:
               path: /ready
@@ -105,11 +81,13 @@ spec:
             timeoutSeconds: 10
           resources:
             limits:
-              cpu: 250m
-              memory: 128Mi
+              cpu: 500m
+              ephemeral-storage: 0.25Gi
+              memory: 256Mi
             requests:
-              cpu: 100m
-              memory: 64Mi
+              cpu: 260m
+              ephemeral-storage: 0.25Gi
+              memory: 128Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -121,7 +99,7 @@ spec:
             - mountPath: /tmp
               name: tmp
             - mountPath: /tmp/.ssh
-              name: publickey
+              name: keys
               readOnly: true
       securityContext:
         fsGroup: 1000
@@ -133,9 +111,11 @@ spec:
       volumes:
         - emptyDir: {}
           name: tmp
-        - name: publickey
+        - name: keys
           secret:
             items:
+              - key: jwtRS256.key
+                path: privatekey
               - key: jwtRS256.key.pub
                 path: publickey
             secretName: jwt-key

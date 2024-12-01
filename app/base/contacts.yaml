@@ -6,14 +6,14 @@ metadata:
     environment: development
     team: accounts
     tier: backend
-  name: userservice
+  name: contacts
 spec:
   ports:
     - name: http
       port: 8080
       targetPort: 8080
   selector:
-    app: userservice
+    app: contacts
     application: bank-of-anthos
     environment: development
     team: accounts
@@ -28,11 +28,11 @@ metadata:
     environment: development
     team: accounts
     tier: backend
-  name: userservice
+  name: contacts
 spec:
   selector:
     matchLabels:
-      app: userservice
+      app: contacts
       application: bank-of-anthos
       environment: development
       team: accounts
@@ -42,7 +42,7 @@ spec:
       annotations:
         proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
       labels:
-        app: userservice
+        app: contacts
         application: bank-of-anthos
         environment: development
         team: accounts
@@ -56,10 +56,6 @@ spec:
               value: "8080"
             - name: ENABLE_TRACING
               value: "true"
-            - name: TOKEN_EXPIRY_SECONDS
-              value: "3600"
-            - name: PRIV_KEY_PATH
-              value: /tmp/.ssh/privatekey
             - name: LOG_LEVEL
               value: info
           envFrom:
@@ -67,11 +63,8 @@ spec:
                 name: environment-config
             - configMapRef:
                 name: accounts-db-config
-          image: us-central1-docker.pkg.dev/bank-of-anthos-ci/bank-of-anthos/userservice:v0.6.5@sha256:f91e0e5bd6cdb16f6b867b2e3e874b23dd01f11592de006776f1dfb136702941
-          name: userservice
-          ports:
-            - containerPort: 8080
-              name: http-server
+          image: chandhudev0/boa-contacts
+          name: contacts
           readinessProbe:
             httpGet:
               path: /ready
@@ -81,13 +74,13 @@ spec:
             timeoutSeconds: 10
           resources:
             limits:
-              cpu: 500m
-              ephemeral-storage: 0.25Gi
-              memory: 256Mi
-            requests:
-              cpu: 260m
+              cpu: 250m
               ephemeral-storage: 0.25Gi
               memory: 128Mi
+            requests:
+              cpu: 100m
+              ephemeral-storage: 0.25Gi
+              memory: 64Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -99,7 +92,7 @@ spec:
             - mountPath: /tmp
               name: tmp
             - mountPath: /tmp/.ssh
-              name: keys
+              name: publickey
               readOnly: true
       securityContext:
         fsGroup: 1000
@@ -111,11 +104,9 @@ spec:
       volumes:
         - emptyDir: {}
           name: tmp
-        - name: keys
+        - name: publickey
           secret:
             items:
-              - key: jwtRS256.key
-                path: privatekey
               - key: jwtRS256.key.pub
                 path: publickey
             secretName: jwt-key

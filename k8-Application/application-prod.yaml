@@ -1,0 +1,45 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app
+  namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: chandhudev0/boa-balancereader:~v0.1, chandhudev0/boa-ledgerwriter:~v0.1, chandhudev0/boa-transactionhistory:~v0.1, chandhudev0/boa-ledgerdb:~v0.1, chandhudev0/boa-loadgenerator:~v0.1, chandhudev0/boa-frontend:~v0.1, chandhudev0/boa-accountsdb:~v0.1, chandhudev0/boa-contacts:~v0.1, chandhudev0/boa-userservice:~v0.1
+    argocd-image-updater.argoproj.io/registry-url: docker.io/
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/update-strategy: latest
+
+    argocd-image-updater.argoproj.io/boa-balancereader.image-name: chandhudev0/boa-balancereader
+    argocd-image-updater.argoproj.io/boa-ledgerwriter.image-name: chandhudev0/boa-ledgerwriter
+    argocd-image-updater.argoproj.io/boa-transactionhistory.image-name: chandhudev0/boa-transactionhistory
+    argocd-image-updater.argoproj.io/boa-ledgerdb.image-name: chandhudev0/boa-ledgerdb
+    argocd-image-updater.argoproj.io/boa-loadgenerator.image-name: chandhudev0/boa-loadgenerator
+    argocd-image-updater.argoproj.io/boa-frontend.image-name: chandhudev0/boa-frontend
+    argocd-image-updater.argoproj.io/boa-accountsdb.image-name: chandhudev0/boa-accountsdb
+    argocd-image-updater.argoproj.io/boa-contacts.image-name: chandhudev0/boa-contacts
+    argocd-image-updater.argoproj.io/boa-userservice.image-name: chandhudev0/boa-userservice
+
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: ssh:git@github.com:chandhuDev/bank-of-anthos-k8.git
+    targetRevision: main
+    path: app/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - Validate=false
+      - CreateNamespace=true.
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+      - ApplyOutOfSyncOnly=true

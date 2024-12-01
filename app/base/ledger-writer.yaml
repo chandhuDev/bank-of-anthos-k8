@@ -6,14 +6,14 @@ metadata:
     environment: development
     team: ledger
     tier: backend
-  name: transactionhistory
+  name: ledgerwriter
 spec:
   ports:
     - name: http
       port: 8080
       targetPort: 8080
   selector:
-    app: transactionhistory
+    app: ledgerwriter
     application: bank-of-anthos
     environment: development
     team: ledger
@@ -28,11 +28,11 @@ metadata:
     environment: development
     team: ledger
     tier: backend
-  name: transactionhistory
+  name: ledgerwriter
 spec:
   selector:
     matchLabels:
-      app: transactionhistory
+      app: ledgerwriter
       application: bank-of-anthos
       environment: development
       team: ledger
@@ -42,7 +42,7 @@ spec:
       annotations:
         proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
       labels:
-        app: transactionhistory
+        app: ledgerwriter
         application: bank-of-anthos
         environment: development
         team: ledger
@@ -58,14 +58,6 @@ spec:
               value: "true"
             - name: ENABLE_METRICS
               value: "true"
-            - name: POLL_MS
-              value: "100"
-            - name: CACHE_SIZE
-              value: "1000"
-            - name: CACHE_MINUTES
-              value: "60"
-            - name: HISTORY_LIMIT
-              value: "100"
             - name: JVM_OPTS
               value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xms256m -Xmx512m
             - name: LOG_LEVEL
@@ -78,16 +70,11 @@ spec:
             - configMapRef:
                 name: environment-config
             - configMapRef:
+                name: service-api-config
+            - configMapRef:
                 name: ledger-db-config
-          image: us-central1-docker.pkg.dev/bank-of-anthos-ci/bank-of-anthos/transactionhistory:v0.6.5@sha256:54a2b0866df44a50832e71b130f3e069fe8bbce71309fb6cf390b19f64d92c09
-          livenessProbe:
-            httpGet:
-              path: /healthy
-              port: 8080
-            initialDelaySeconds: 120
-            periodSeconds: 5
-            timeoutSeconds: 10
-          name: transactionhistory
+          image: chandhudev0/boa-ledgerwriter
+          name: ledgerwriter
           readinessProbe:
             httpGet:
               path: /ready
@@ -114,7 +101,7 @@ spec:
           startupProbe:
             failureThreshold: 30
             httpGet:
-              path: /healthy
+              path: /ready
               port: 8080
             periodSeconds: 10
           volumeMounts:

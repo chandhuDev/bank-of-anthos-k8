@@ -1,0 +1,43 @@
+---
+namespace: staging
+replicas:
+ - name: balancereader
+   count: 1
+ - name: contacts
+   count: 1
+ - name: frontend
+   count: 2
+ - name: ledgerwriter
+   count: 1
+ - name: loadgenerator
+   count: 1
+ - name: transactionhistory
+   count: 1
+ - name: userservice
+   count: 1
+ - name: accountsdb
+   count: 2
+ - name: ledgerdb
+   count: 2
+images:
+ - name: chandhudev0/boa-accountsdb
+   newTag: v0.1
+ - name: chandhudev0/boa-balancereader
+   newTag: v0.1
+ - name: chandhudev0/boa-contacts
+   newTag: v0.1
+ - name: chandhudev0/boa-frontend
+   newTag: v0.1
+ - name: chandhudev0/boa-ledgerdb
+   newTag: v0.1
+ - name: chandhudev0/boa-ledgerwriter
+   newTag: v0.1
+ - name: chandhudev0/boa-loadgenerator
+   newTag: v0.1
+ - name: chandhudev0/boa-transactionhistroy
+   newTag: v0.1
+ - name: chandhudev0/boa-userservice
+   newTag: v0.1
+resources:
+ - ../../../base
+namePrefix: prod-

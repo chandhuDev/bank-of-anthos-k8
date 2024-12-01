@@ -1,0 +1,60 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app
+  namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: >
+      balancereader=chandhudev0/boa-balancereader:~v0,
+      ledgerwriter=chandhudev0/boa-ledgerwriter:~v0,
+      transactionhistory=chandhudev0/boa-transactionhistory:~v0,
+      ledgerdb=chandhudev0/boa-ledgerdb:~v0,
+      loadgenerator=chandhudev0/boa-loadgenerator:~v0,
+      frontend=chandhudev0/boa-frontend:~v0,
+      accountsdb=chandhudev0/boa-accountsdb:~v0,
+      contacts=chandhudev0/boa-contacts:~v0,
+      userservice=chandhudev0/boa-userservice:~v0
+    argocd-image-updater.argoproj.io/registry-url: docker.io
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/balancereader.update-strategy: semver
+    argocd-image-updater.argoproj.io/ledgerwriter.update-strategy: semver
+    argocd-image-updater.argoproj.io/transactionhistory.update-strategy: semver
+    argocd-image-updater.argoproj.io/ledgerdb.update-strategy: semver
+    argocd-image-updater.argoproj.io/loadgenerator.update-strategy: semver
+    argocd-image-updater.argoproj.io/frontend.update-strategy: semver
+    argocd-image-updater.argoproj.io/accountsdb.update-strategy: semver
+    argocd-image-updater.argoproj.io/contacts.update-strategy: semver
+    argocd-image-updater.argoproj.io/userservice.update-strategy: semver
+    argocd-image-updater.argoproj.io/balancereader.kustomization: overlays/dev/kustomization.yaml
+    argocd-image-updater.argoproj.io/ledgerwriter.kustomization: overlays/dev/kustomization.yaml
+    argocd-image-updater.argoproj.io/transactionhistory.kustomization: overlays/dev/kustomization.yaml
+    argocd-image-updater.argoproj.io/ledgerdb.kustomization: overlays/dev/kustomization.yaml
+    argocd-image-updater.argoproj.io/loadgenerator.kustomization: overlays/dev/kustomization.yaml
+    argocd-image-updater.argoproj.io/frontend.kustomization: overlays/dev/kustomization.yaml
+    argocd-image-updater.argoproj.io/accountsdb.kustomization: overlays/dev/kustomization.yaml
+    argocd-image-updater.argoproj.io/contacts.kustomization: overlays/dev/kustomization.yaml
+    argocd-image-updater.argoproj.io/userservice.kustomization: overlays/dev/kustomization.yaml
+    argocd-image-updater.argoproj.io/git-branch: main
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:chandhuDev/bank-of-anthos-k8.git
+    targetRevision: main
+    path: app/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - Validate=false
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+      - ApplyOutOfSyncOnly=true
