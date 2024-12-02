@@ -10,6 +10,6 @@ data:
         credentials:
           secretName: github-secret-argocd
     repositories:
-      - name: git@github.com:chandhuDev/bank-of-anthos-k8.git
+      - url: git@github.com:chandhuDev/bank-of-anthos-k8.git
         credentials:
           secretName: github-secret-argocd
