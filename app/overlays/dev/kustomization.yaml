@@ -1,5 +1,5 @@
 ---
-namespace: staging
+namespace: dev
 replicas:
  - name: balancereader
    count: 1
@@ -35,5 +35,5 @@ images:
  - name: chandhudev0/boa-userservice
    newTag: v0.1
 resources:
- - ../../../base
+ - ../../base
 namePrefix: dev-
