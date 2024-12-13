@@ -4,22 +4,38 @@ kind: Application
 metadata:
   name: my-app
   namespace: argocd
-  annotations:
-    argocd-image-updater.argoproj.io/image-list: chandhudev0/boa-balancereader:~v0.1, chandhudev0/boa-ledgerwriter:~v0.1, chandhudev0/boa-transactionhistory:~v0.1, chandhudev0/boa-ledgerdb:~v0.1, chandhudev0/boa-loadgenerator:~v0.1, chandhudev0/boa-frontend:~v0.1, chandhudev0/boa-accountsdb:~v0.1, chandhudev0/boa-contacts:~v0.1, chandhudev0/boa-userservice:~v0.1
-    argocd-image-updater.argoproj.io/registry-url: docker.io/
+   annotations:
+    argocd-image-updater.argoproj.io/image-list: >
+      accountsdb=chandhudev0/boa-accountsdb:~v0,
+      balancereader=chandhudev0/boa-balancereader:~v0,
+      contacts=chandhudev0/boa-contacts:~v0,
+      frontend=chandhudev0/boa-frontend:~v0,
+      ledgerdb=chandhudev0/boa-ledgerdb:~v0,
+      ledgerwriter=chandhudev0/boa-ledgerwriter:~v0,
+      loadgenerator=chandhudev0/boa-loadgenerator:~v0,
+      transactionhistory=chandhudev0/boa-transactionhistory:~v0,
+      userservice=chandhudev0/boa-userservice:~v0
+    argocd-image-updater.argoproj.io/registry-url: docker.io
     argocd-image-updater.argoproj.io/write-back-method: git
-    argocd-image-updater.argoproj.io/update-strategy: latest
-
-    argocd-image-updater.argoproj.io/boa-balancereader.image-name: chandhudev0/boa-balancereader
-    argocd-image-updater.argoproj.io/boa-ledgerwriter.image-name: chandhudev0/boa-ledgerwriter
-    argocd-image-updater.argoproj.io/boa-transactionhistory.image-name: chandhudev0/boa-transactionhistory
-    argocd-image-updater.argoproj.io/boa-ledgerdb.image-name: chandhudev0/boa-ledgerdb
-    argocd-image-updater.argoproj.io/boa-loadgenerator.image-name: chandhudev0/boa-loadgenerator
-    argocd-image-updater.argoproj.io/boa-frontend.image-name: chandhudev0/boa-frontend
-    argocd-image-updater.argoproj.io/boa-accountsdb.image-name: chandhudev0/boa-accountsdb
-    argocd-image-updater.argoproj.io/boa-contacts.image-name: chandhudev0/boa-contacts
-    argocd-image-updater.argoproj.io/boa-userservice.image-name: chandhudev0/boa-userservice
-
+    argocd-image-updater.argoproj.io/balancereader.update-strategy: semver
+    argocd-image-updater.argoproj.io/ledgerwriter.update-strategy: semver
+    argocd-image-updater.argoproj.io/transactionhistory.update-strategy: semver
+    argocd-image-updater.argoproj.io/ledgerdb.update-strategy: semver
+    argocd-image-updater.argoproj.io/loadgenerator.update-strategy: semver
+    argocd-image-updater.argoproj.io/frontend.update-strategy: semver
+    argocd-image-updater.argoproj.io/accountsdb.update-strategy: semver
+    argocd-image-updater.argoproj.io/contacts.update-strategy: semver
+    argocd-image-updater.argoproj.io/userservice.update-strategy: semver
+    argocd-image-updater.argoproj.io/balancereader.kustomization: overlays/prod/kustomization.yaml
+    argocd-image-updater.argoproj.io/ledgerwriter.kustomization: overlays/prod/kustomization.yaml
+    argocd-image-updater.argoproj.io/transactionhistory.kustomization: overlays/prod/kustomization.yaml
+    argocd-image-updater.argoproj.io/ledgerdb.kustomization: overlays/prod/kustomization.yaml
+    argocd-image-updater.argoproj.io/loadgenerator.kustomization: overlays/prod/kustomization.yaml
+    argocd-image-updater.argoproj.io/frontend.kustomization: overlays/prod/kustomization.yaml
+    argocd-image-updater.argoproj.io/accountsdb.kustomization: overlays/prod/kustomization.yaml
+    argocd-image-updater.argoproj.io/contacts.kustomization: overlays/prod/kustomization.yaml
+    argocd-image-updater.argoproj.io/userservice.kustomization: overlays/prod/kustomization.yaml
+    argocd-image-updater.argoproj.io/git-branch: main
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

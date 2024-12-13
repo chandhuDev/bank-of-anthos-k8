@@ -79,7 +79,7 @@ spec:
                 name: environment-config
             - configMapRef:
                 name: ledger-db-config
-          image: chandhudev0/boa-transactionhistroy
+          image: chandhudev0/boa-transactionhistory
           livenessProbe:
             httpGet:
               path: /healthy

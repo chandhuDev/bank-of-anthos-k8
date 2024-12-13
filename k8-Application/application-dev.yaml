@@ -5,14 +5,14 @@ metadata:
   namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: >
-      balancereader=chandhudev0/boa-balancereader:~v0,
-      ledgerwriter=chandhudev0/boa-ledgerwriter:~v0,
-      transactionhistory=chandhudev0/boa-transactionhistory:~v0,
-      ledgerdb=chandhudev0/boa-ledgerdb:~v0,
-      loadgenerator=chandhudev0/boa-loadgenerator:~v0,
-      frontend=chandhudev0/boa-frontend:~v0,
       accountsdb=chandhudev0/boa-accountsdb:~v0,
+      balancereader=chandhudev0/boa-balancereader:~v0,
       contacts=chandhudev0/boa-contacts:~v0,
+      frontend=chandhudev0/boa-frontend:~v0,
+      ledgerdb=chandhudev0/boa-ledgerdb:~v0,
+      ledgerwriter=chandhudev0/boa-ledgerwriter:~v0,
+      loadgenerator=chandhudev0/boa-loadgenerator:~v0,
+      transactionhistory=chandhudev0/boa-transactionhistory:~v0,
       userservice=chandhudev0/boa-userservice:~v0
     argocd-image-updater.argoproj.io/registry-url: docker.io
     argocd-image-updater.argoproj.io/write-back-method: git
