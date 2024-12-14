@@ -63,6 +63,8 @@ spec:
                 name: environment-config
             - configMapRef:
                 name: accounts-db-config
+            - configMapRef:
+                name: gcp-settings
           image: chandhudev0/boa-contacts
           name: contacts
           readinessProbe:

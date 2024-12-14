@@ -73,6 +73,8 @@ spec:
                 name: service-api-config
             - configMapRef:
                 name: ledger-db-config
+            - configMapRef:
+                name: gcp-settings
           image: chandhudev0/boa-ledgerwriter
           name: ledgerwriter
           readinessProbe:

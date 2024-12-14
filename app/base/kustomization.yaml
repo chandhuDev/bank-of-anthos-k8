@@ -12,3 +12,4 @@ resources:
   - transaction-history.yaml
   - user-service.yaml
   - namespace.yaml
+  - configmap.yaml

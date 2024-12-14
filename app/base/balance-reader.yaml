@@ -75,6 +75,8 @@ spec:
                 name: environment-config
             - configMapRef:
                 name: ledger-db-config
+            - configMapRef:
+                name: gcp-settings
           image: chandhudev0/boa-balancereader
           livenessProbe:
             httpGet:
