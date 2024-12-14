@@ -1,9 +1,11 @@
 kustomize:
   images:
-  - chandhudev0/boa-balancereader:v0.31
-  - chandhudev0/boa-ledgerwriter:v0.31
-  - chandhudev0/boa-ledgerdb:v0.31
-  - chandhudev0/boa-loadgenerator:v0.31
-  - chandhudev0/boa-frontend:v0.31
   - chandhudev0/boa-accountsdb:v0.31
+  - chandhudev0/boa-balancereader:v0.31
   - chandhudev0/boa-contacts:v0.31
+  - chandhudev0/boa-frontend:v0.31
+  - chandhudev0/boa-ledgerdb:v0.31
+  - chandhudev0/boa-ledgerwriter:v0.31
+  - chandhudev0/boa-loadgenerator:v0.31
+  - chandhudev0/boa-transactionhistory:v0.31
+  - chandhudev0/boa-userservice:v0.31
