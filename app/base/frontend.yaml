@@ -50,16 +50,26 @@ spec:
     spec:
       containers:
         - env:
-            - name: VERSION
-              value: v0.6.5
-            - name: PORT
-              value: "8080"
-            - name: ENABLE_TRACING
-              value: "true"
-            - name: SCHEME
-              value: http
-            - name: LOG_LEVEL
-              value: info
+           - name: VERSION
+             value: v0.6.5
+           - name: PORT
+             value: "8080"
+           - name: ENABLE_TRACING
+             value: "false"       # Make sure this is false
+           - name: ENABLE_METRICS
+             value: "false"       # Add this
+           - name: SCHEME
+             value: http
+           - name: LOG_LEVEL
+             value: info
+           - name: DISABLE_TRACING   # Add this
+             value: "true"
+           - name: DISABLE_METRICS   # Add this
+             value: "true"
+           - name: CLOUD_TRACE_ENABLED  # Add this
+             value: "false"
+           - name: OTEL_PYTHON_TRACER_PROVIDER  # Add this to disable OpenTelemetry
+             value: "none"
             - name: DEFAULT_USERNAME
               valueFrom:
                 configMapKeyRef:

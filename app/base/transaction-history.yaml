@@ -55,9 +55,9 @@ spec:
             - name: PORT
               value: "8080"
             - name: ENABLE_TRACING
-              value: "true"
+              value: "false"
             - name: ENABLE_METRICS
-              value: "true"
+              value: "false"
             - name: POLL_MS
               value: "100"
             - name: CACHE_SIZE
@@ -70,6 +70,10 @@ spec:
               value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xms256m -Xmx512m
             - name: LOG_LEVEL
               value: info
+            - name: CLOUD_TRACE_ENABLED  # Add this
+              value: "false"
+            - name: OTEL_PYTHON_TRACER_PROVIDER  # Add this to disable OpenTelemetry
+              value: "none"
             - name: NAMESPACE
               valueFrom:
                 fieldRef:

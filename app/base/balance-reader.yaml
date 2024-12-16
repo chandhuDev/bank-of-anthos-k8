@@ -55,9 +55,17 @@ spec:
             - name: PORT
               value: "8080"
             - name: ENABLE_TRACING
-              value: "true"
+              value: "false"
             - name: ENABLE_METRICS
+              value: "false"
+            - name: DISABLE_TRACING   # Add this
               value: "true"
+            - name: DISABLE_METRICS   # Add this
+              value: "true"
+            - name: CLOUD_TRACE_ENABLED  # Add this
+              value: "false"
+            - name: OTEL_PYTHON_TRACER_PROVIDER  # Add this to disable OpenTelemetry
+              value: "none"
             - name: POLL_MS
               value: "100"
             - name: CACHE_SIZE
