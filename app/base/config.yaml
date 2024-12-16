@@ -30,6 +30,14 @@ data:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  annotations:
-    iam.gke.io/gcp-service-account: gke-workload-development@bank-of-anthos-ci.iam.gserviceaccount.com
   name: bank-of-anthos
+  namespace: default
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gcp-settings
+  namespace: dev
+data:
+  ENABLE_TRACING: "false"
+  ENABLE_METRICS: "false"
